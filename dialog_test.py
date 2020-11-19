@@ -14,12 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(641, 476)
-        self.buttonBox = QtWidgets.QDialogButtonBox(Dialog)
-        self.buttonBox.setGeometry(QtCore.QRect(10, 440, 621, 32))
-        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
-        self.buttonBox.setObjectName("buttonBox")
+        Dialog.resize(641, 440)
         self.formLayoutWidget = QtWidgets.QWidget(Dialog)
         self.formLayoutWidget.setGeometry(QtCore.QRect(0, -1, 641, 441))
         self.formLayoutWidget.setObjectName("formLayoutWidget")
@@ -57,6 +52,11 @@ class Ui_Dialog(object):
         self.choose.setFont(font)
         self.choose.setObjectName("choose")
         self.formLayout.setWidget(5, QtWidgets.QFormLayout.FieldRole, self.choose)
+        self.buttonBox = QtWidgets.QDialogButtonBox(self.formLayoutWidget)
+        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setObjectName("buttonBox")
+        self.formLayout.setWidget(6, QtWidgets.QFormLayout.FieldRole, self.buttonBox)
 
         self.retranslateUi(Dialog)
         self.buttonBox.accepted.connect(Dialog.accept)
@@ -67,6 +67,6 @@ class Ui_Dialog(object):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Введите данные для теста"))
         self.label.setText(_translate("Dialog", "Введите кол-во вопросов: "))
-        self.test_name.setText(_translate("Dialog", "Введите название файла для теста(без разрешения):"))
+        self.test_name.setText(_translate("Dialog", "Введите название теста:"))
         self.pushButton.setText(_translate("Dialog", "Выберите папку для хранения теста"))
-        self.choose.setText(_translate("Dialog", "Директория для сохранения файлов: ничего не выбрано"))
+        self.choose.setText(_translate("Dialog", "Директория для сохранения файлов:"))

@@ -36,6 +36,7 @@ class DialogTest(QWidget, Ui_Dialog):
         super().__init__()
         self.setupUi(self)
         self.pushButton.clicked.connect(self.reciever)
+        self.setFixedSize(650, 300)
 
     def accept(self):
         inform.name = self.name_input.text()
@@ -55,7 +56,7 @@ class DialogTest(QWidget, Ui_Dialog):
 
     def reciever(self):
         inform.path = QFileDialog.getExistingDirectory(self, 'Выберите папку: ', '')
-        self.choose.setText('Директория для сохранения файлов: ' + inform.path)
+        self.choose.setText('Директория для сохранения файлов: \n' + inform.path)
 
 
 class MainWidget(QMainWindow, Ui_MainWindow):
