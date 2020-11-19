@@ -1,7 +1,23 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QFileDialog
 from main_ui import Ui_MainWindow
 from dialog_test import Ui_Dialog
+from warning_dialog import Ui_WarninDialog
 import sys
+
+
+class WarningException(Exception):
+    def __init__(self):
+        self.warning = WarningDialog()
+
+
+class WarningDialog(QWidget, Ui_WarninDialog):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+        self.pushButton.clicked.connect(self.reciever)
+
+    def reciever(self):
+        self.close()
 
 
 class TestInfoStruct:
@@ -9,6 +25,7 @@ class TestInfoStruct:
         self.name = None
         self.count = None
         self.path = None
+        self.f = None
 
 
 inform = TestInfoStruct()
@@ -23,13 +40,22 @@ class DialogTest(QWidget, Ui_Dialog):
     def accept(self):
         inform.name = self.name_input.text()
         inform.count = int(self.spinBox.text())
+        try:
+            if '.' in inform.name:
+                raise WarningException
+            if inform.count == 0:
+                raise WarningException
+            inform.f = open(inform.path + '/' + inform.name + '.tstx', mode='w+', encoding='utf-8')
+        except WarningException as e:
+            self.e = e
+            self.e.warning.show()
 
     def reject(self):
         self.close()
 
     def reciever(self):
-        self.path = QFileDialog.getExistingDirectory(self, 'Выберите папку: ', '')
-        self.choose.setText('Директория для сохранения файлов: ' + self.path)
+        inform.path = QFileDialog.getExistingDirectory(self, 'Выберите папку: ', '')
+        self.choose.setText('Директория для сохранения файлов: ' + inform.path)
 
 
 class MainWidget(QMainWindow, Ui_MainWindow):
@@ -46,7 +72,7 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         self.test_dialog.show()
 
     def pass_test(self):
-        print('pass')
+        pass
 
 
 if __name__ == '__main__':

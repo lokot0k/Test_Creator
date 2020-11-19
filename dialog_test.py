@@ -65,8 +65,8 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "Введите данные для теста"))
         self.label.setText(_translate("Dialog", "Введите кол-во вопросов: "))
-        self.test_name.setText(_translate("Dialog", "Введите название теста:"))
+        self.test_name.setText(_translate("Dialog", "Введите название файла для теста(без разрешения):"))
         self.pushButton.setText(_translate("Dialog", "Выберите папку для хранения теста"))
         self.choose.setText(_translate("Dialog", "Директория для сохранения файлов: ничего не выбрано"))
