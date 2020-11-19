@@ -46,12 +46,15 @@ class DialogTest(QWidget, Ui_Dialog):
                 raise WarningException
             if inform.count == 0:
                 raise WarningException
-            inform.f = open(inform.path + '/' + inform.name + '.tstx', mode='w+', encoding='utf-8')
+            inform.f = open(inform.path + '/' + inform.name + '.tstx', mode='w', encoding='utf-8')
+            self.close()
         except WarningException as e:
             self.e = e
             self.e.warning.show()
 
     def reject(self):
+        global inform
+        inform.__init__()
         self.close()
 
     def reciever(self):
@@ -69,7 +72,6 @@ class MainWidget(QMainWindow, Ui_MainWindow):
 
     def create_test(self):
         self.test_dialog = DialogTest()
-
         self.test_dialog.show()
 
     def pass_test(self):
