@@ -2,12 +2,15 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QFileDialog
 from main_ui import Ui_MainWindow
 from dialog_test import Ui_Dialog
 from warning_dialog import Ui_WarninDialog
+from create_ans import Ui_Question
 import sys
+import csv
 
 
 class WarningException(Exception):
     def __init__(self):
         self.warning = WarningDialog()
+        self.warning.setFixedSize(600, 350)
 
 
 class WarningDialog(QWidget, Ui_WarninDialog):
@@ -26,9 +29,32 @@ class TestInfoStruct:
         self.count = None
         self.path = None
         self.f = None
+        self.writer = None
+        self.curr = 0
 
 
 inform = TestInfoStruct()
+
+
+class QuestCreator(QWidget, Ui_Question):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+        self.show()
+        self.next_push.clicked.connect(self.reciever)
+        inform.curr += 1
+        self.setWindowTitle("Вопрос №" + str(inform.curr))
+        if self.curr == self.count:
+            self.next_push.setText('Завершить')
+
+    def reciever(self):
+        inform.f.write(self.quest_value.toPlainText() + " @@@" + self.ans_value.toPlainText() + "\n-----\n")
+        if inform.curr < inform.count:
+            self.close()
+            self.__init__()
+        else:
+            self.close()
+            inform.__init__()
 
 
 class DialogTest(QWidget, Ui_Dialog):
@@ -37,6 +63,7 @@ class DialogTest(QWidget, Ui_Dialog):
         self.setupUi(self)
         self.pushButton.clicked.connect(self.reciever)
         self.setFixedSize(650, 300)
+        self.quest = None
 
     def accept(self):
         inform.name = self.name_input.text()
@@ -47,7 +74,9 @@ class DialogTest(QWidget, Ui_Dialog):
             if inform.count == 0:
                 raise WarningException
             inform.f = open(inform.path + '/' + inform.name + '.tstx', mode='w', encoding='utf-8')
+            inform.csv_doc = open(inform.path + '/' + inform.name + '.csv', mode='w', encoding='utf-8')
             self.close()
+            self.quest = QuestCreator()
         except WarningException as e:
             self.e = e
             self.e.warning.show()
