@@ -54,7 +54,7 @@ class Ui_Dialog(object):
         self.formLayout.setWidget(5, QtWidgets.QFormLayout.FieldRole, self.choose)
         self.buttonBox = QtWidgets.QDialogButtonBox(self.formLayoutWidget)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
         self.formLayout.setWidget(6, QtWidgets.QFormLayout.FieldRole, self.buttonBox)
 
@@ -67,6 +67,6 @@ class Ui_Dialog(object):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Введите данные для теста"))
         self.label.setText(_translate("Dialog", "Введите кол-во вопросов: "))
-        self.test_name.setText(_translate("Dialog", "Введите название теста:"))
+        self.test_name.setText(_translate("Dialog", "Введите название файла теста(без типа):"))
         self.pushButton.setText(_translate("Dialog", "Выберите папку для хранения теста"))
         self.choose.setText(_translate("Dialog", "Директория для сохранения файлов:"))
