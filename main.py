@@ -5,8 +5,22 @@ from warning_dialog import Ui_WarninDialog
 from create_ans import Ui_Question
 from acc_dialog import Ui_Form
 from test_parser import ParserCfg
+from test_form import TestForm
 import sys
 import csv
+
+
+class TestInfoStruct:
+    def __init__(self):
+        self.name = None
+        self.count = None
+        self.path = None
+        self.f = None
+        self.writer = None
+        self.curr = 0
+
+
+inform = TestInfoStruct()
 
 
 class AccCfg:
@@ -14,13 +28,52 @@ class AccCfg:
         self.name = None
         self.path = None
         self.row = []
+        self.curr = 0
         self.count = None
         self.quests = None
         self.answs = None
-        self.result = None
+        self.result = 0
 
 
 accInf = AccCfg()
+
+
+class FormTest(QWidget, TestForm):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+        self.textBrowser.setText(accInf.quests[accInf.curr])
+        self.setFixedSize(682, 340)
+        self.pushButton.clicked.connect(self.input)
+        accInf.curr += 1
+        self.num.setText('Задание №' + str(accInf.curr))
+        self.setWindowTitle('Задание №' + str(accInf.curr))
+        self.show()
+        # TODO: fix bug which occurred when you go to next question
+
+    def input(self):
+        try:
+            if self.ans_input.text() == '':
+                raise WarningException
+            ans = self.ans_input.text().strip()
+            accInf.row.append(ans)
+            if accInf.answs[accInf.curr - 1] == ans:
+                accInf.result += 1
+
+            if inform.curr < inform.count:
+                self.close()
+                self.__init__()
+            else:
+                accInf.row.append(accInf.result)
+                self.close()
+                inform.f = open(accInf.path.split('.')[0] + '.csv', encoding='utf-8', mode='a')
+                inform.writer = csv.writer(inform.f, delimiter=';', quotechar='"')
+                inform.writer.writerow(accInf.row)
+                self.close()
+
+        except WarningException as e:
+            self.e = e
+            self.e.warning.show()
 
 
 class AccSett(QWidget, Ui_Form):
@@ -38,6 +91,7 @@ class AccSett(QWidget, Ui_Form):
     def start(self):
         try:
             accInf.name = self.lineEdit.text()
+            accInf.row.append(accInf.name)
             if '.tstx' not in accInf.path:
                 raise WarningException
             if accInf.name == '':
@@ -45,6 +99,8 @@ class AccSett(QWidget, Ui_Form):
             self.close()
             parser = ParserCfg(accInf.path)
             accInf.quests, accInf.answs = parser.parse()
+            accInf.count = len(accInf.quests)
+            self.form_test = FormTest()
         except WarningException as e:
             self.e = e
             self.e.warning.show()
@@ -64,19 +120,6 @@ class WarningDialog(QWidget, Ui_WarninDialog):
 
     def reciever(self):
         self.close()
-
-
-class TestInfoStruct:
-    def __init__(self):
-        self.name = None
-        self.count = None
-        self.path = None
-        self.f = None
-        self.writer = None
-        self.curr = 0
-
-
-inform = TestInfoStruct()
 
 
 class QuestCreator(QWidget, Ui_Question):
