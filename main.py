@@ -49,7 +49,6 @@ class FormTest(QWidget, TestForm):
         self.num.setText('Задание №' + str(accInf.curr))
         self.setWindowTitle('Задание №' + str(accInf.curr))
         self.show()
-        # TODO: fix bug which occurred when you go to next question
 
     def input(self):
         try:
@@ -60,7 +59,7 @@ class FormTest(QWidget, TestForm):
             if accInf.answs[accInf.curr - 1] == ans:
                 accInf.result += 1
 
-            if inform.curr < inform.count:
+            if accInf.curr < accInf.count:
                 self.close()
                 self.__init__()
             else:
