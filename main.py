@@ -56,7 +56,7 @@ class FormTest(QWidget, TestForm):
                 raise WarningException
             ans = self.ans_input.text().strip()
             accInf.row.append(ans)
-            if accInf.answs[accInf.curr - 1] == ans:
+            if accInf.answs[accInf.curr - 1].lower() == ans.lower():
                 accInf.result += 1
 
             if accInf.curr < accInf.count:
@@ -68,7 +68,12 @@ class FormTest(QWidget, TestForm):
                 inform.f = open(accInf.path.split('.')[0] + '.csv', encoding='utf-8', mode='a')
                 inform.writer = csv.writer(inform.f, delimiter=';', quotechar='"')
                 inform.writer.writerow(accInf.row)
+
+                self.e = WarningException()
                 self.close()
+                self.e.warning.setWindowTitle('Результат')
+                self.e.warning.label.setText("Вы набрали " + str(accInf.result) + " из " + str(accInf.count))
+                self.e.warning.show()
 
         except WarningException as e:
             self.e = e
@@ -134,12 +139,18 @@ class QuestCreator(QWidget, Ui_Question):
 
     def reciever(self):
         inform.f.write(
-            str(self.curr) + '.' + self.quest_value.toPlainText() +
+            self.quest_value.toPlainText() +
             " @@@" + self.ans_value.toPlainText() + "\n-----\n")
         if inform.curr < inform.count:
-            self.close()
+
             self.__init__()
+            self.close()
         else:
+            self.e = WarningException()
+            self.e.warning.setWindowTitle('Предупреждение')
+            self.e.warning.label.setText('Вы успешно создали тест ' +
+                                         inform.name + ' в папке \n' + inform.path)
+            self.e.warning.show()
             self.close()
             inform.__init__()
 
