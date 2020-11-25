@@ -56,6 +56,13 @@ class Ui_MainWindow(object):
         self.PassTest.setAutoFillBackground(False)
         self.PassTest.setObjectName("PassTest")
         self.verticalLayout.addWidget(self.PassTest)
+        self.pushButton = QtWidgets.QPushButton(self.verticalLayoutWidget)
+        self.pushButton.setMinimumSize(QtCore.QSize(799, 60))
+        font = QtGui.QFont()
+        font.setPointSize(32)
+        self.pushButton.setFont(font)
+        self.pushButton.setObjectName("pushButton")
+        self.verticalLayout.addWidget(self.pushButton)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 830, 21))
@@ -71,6 +78,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "Test Creator"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.CreateTest.setText(_translate("MainWindow", "Создать тест"))
         self.PassTest.setText(_translate("MainWindow", "Пройти тест"))
+        self.pushButton.setText(_translate("MainWindow", "Посмотреть результаты"))

@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QFileDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QFileDialog, QTableWidgetItem
 from main_ui import Ui_MainWindow
 from dialog_test import Ui_Dialog
 from warning_dialog import Ui_WarninDialog
@@ -6,6 +6,7 @@ from create_ans import Ui_Question
 from acc_dialog import Ui_Form
 from test_parser import ParserCfg
 from test_form import TestForm
+from result_table import TableForm
 import sys
 import csv
 
@@ -65,7 +66,7 @@ class FormTest(QWidget, TestForm):
             else:
                 accInf.row.append(accInf.result)
                 self.close()
-                inform.f = open(accInf.path.split('.')[0] + '.csv', encoding='utf-8', mode='a')
+                inform.f = open(accInf.path.split('.')[0] + '.csv', encoding='utf-8', mode='a', newline='')
                 inform.writer = csv.writer(inform.f, delimiter=';', quotechar='"')
                 inform.writer.writerow(accInf.row)
 
@@ -120,10 +121,34 @@ class WarningDialog(QWidget, Ui_WarninDialog):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.pushButton.clicked.connect(self.reciever)
+        self.pushButton.clicked.connect(self.close)
 
-    def reciever(self):
-        self.close()
+
+class ResultTable(QWidget, TableForm):
+    def __init__(self, path):
+        super().__init__()
+        self.setupUi(self)
+        self.setWindowTitle('Результаты')
+        self.path = path
+        self.load_table(self.path)
+        self.pushButton.setText('Закрыть')
+        self.pushButton.clicked.connect(self.close)
+
+    def load_table(self, table_name):
+        with open(table_name, encoding="utf8") as csvfile:
+            reader = csv.reader(csvfile,
+                                delimiter=';', quotechar='"')
+            title = next(reader)
+            self.tableWidget.setColumnCount(len(title))
+            self.tableWidget.setHorizontalHeaderLabels(title)
+            self.tableWidget.setRowCount(0)
+            for i, row in enumerate(reader):
+                self.tableWidget.setRowCount(
+                    self.tableWidget.rowCount() + 1)
+                for j, elem in enumerate(row):
+                    self.tableWidget.setItem(
+                        i, j, QTableWidgetItem(elem))
+            self.tableWidget.resizeColumnsToContents()
 
 
 class QuestCreator(QWidget, Ui_Question):
@@ -142,9 +167,8 @@ class QuestCreator(QWidget, Ui_Question):
             self.quest_value.toPlainText() +
             " @@@" + self.ans_value.toPlainText() + "\n-----\n")
         if inform.curr < inform.count:
-
-            self.__init__()
             self.close()
+            self.__init__()
         else:
             self.e = WarningException()
             self.e.warning.setWindowTitle('Предупреждение')
@@ -172,7 +196,7 @@ class DialogTest(QWidget, Ui_Dialog):
             if inform.count == 0:
                 raise WarningException
             inform.f = open(inform.path + '/' + inform.name + '.tstx', mode='w', encoding='utf-8')
-            inform.csv_doc = open(inform.path + '/' + inform.name + '.csv', mode='w', encoding='utf-8')
+            inform.csv_doc = open(inform.path + '/' + inform.name + '.csv', mode='w', encoding='utf-8', newline='')
             inform.writer = csv.writer(inform.csv_doc, delimiter=';', quotechar='"')
             a = ['Name']
             for i in range(inform.count):
@@ -201,9 +225,11 @@ class MainWidget(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.setWindowTitle("Test Creator")
         self.CreateTest.clicked.connect(self.create_test)
         self.PassTest.clicked.connect(self.pass_test)
         self.setFixedSize(800, 500)
+        self.pushButton.clicked.connect(self.show_results)
 
     def create_test(self):
         self.test_dialog = DialogTest()
@@ -213,6 +239,11 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         self.close()
         self.acc_sett = AccSett()
         self.acc_sett.show()
+
+    def show_results(self):
+        path = QFileDialog.getOpenFileName(self, 'Выберите таблицу результатов: ', '')[0]
+        self.table = ResultTable(path)
+        self.table.show()
 
 
 if __name__ == '__main__':
