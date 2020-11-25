@@ -241,9 +241,15 @@ class MainWidget(QMainWindow, Ui_MainWindow):
         self.acc_sett.show()
 
     def show_results(self):
-        path = QFileDialog.getOpenFileName(self, 'Выберите таблицу результатов: ', '')[0]
-        self.table = ResultTable(path)
-        self.table.show()
+        try:
+            path = QFileDialog.getOpenFileName(self, 'Выберите таблицу результатов: ', '')[0]
+            if '.csv' not in path:
+                raise WarningException
+            self.table = ResultTable(path)
+            self.table.show()
+        except WarningException as e:
+            self.e = e
+            self.e.warning.show()
 
 
 if __name__ == '__main__':
