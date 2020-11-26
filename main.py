@@ -69,7 +69,7 @@ class FormTest(QWidget, TestForm):
                 inform.f = open(accInf.path.split('.')[0] + '.csv', encoding='utf-8', mode='a')
                 inform.writer = csv.writer(inform.f, delimiter=';', quotechar='"')
                 inform.writer.writerow(accInf.row)
-
+                inform.f.close()
                 self.e = WarningException()
                 self.close()
                 self.e.warning.setWindowTitle('Результат')
