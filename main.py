@@ -66,7 +66,7 @@ class FormTest(QWidget, TestForm):
             else:
                 accInf.row.append(accInf.result)
                 self.close()
-                inform.f = open(accInf.path.split('.')[0] + '.csv', encoding='utf-8', mode='a', newline='')
+                inform.f = open(accInf.path.split('.')[0] + '.csv', encoding='utf-8', mode='a')
                 inform.writer = csv.writer(inform.f, delimiter=';', quotechar='"')
                 inform.writer.writerow(accInf.row)
 
@@ -196,7 +196,7 @@ class DialogTest(QWidget, Ui_Dialog):
             if inform.count == 0:
                 raise WarningException
             inform.f = open(inform.path + '/' + inform.name + '.tstx', mode='w', encoding='utf-8')
-            inform.csv_doc = open(inform.path + '/' + inform.name + '.csv', mode='w', encoding='utf-8', newline='')
+            inform.csv_doc = open(inform.path + '/' + inform.name + '.csv', mode='w', encoding='utf-8')
             inform.writer = csv.writer(inform.csv_doc, delimiter=';', quotechar='"')
             a = ['Name']
             for i in range(inform.count):
