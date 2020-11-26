@@ -195,8 +195,8 @@ class DialogTest(QWidget, Ui_Dialog):
                 raise WarningException
             if inform.count == 0:
                 raise WarningException
-            inform.f = open(inform.path + '/' + inform.name + '.tstx', mode='w', encoding='utf-8', newline='')
-            inform.csv_doc = open(inform.path + '/' + inform.name + '.csv', mode='w', encoding='utf-8')
+            inform.f = open(inform.path + '/' + inform.name + '.tstx', mode='w', encoding='utf-8')
+            inform.csv_doc = open(inform.path + '/' + inform.name + '.csv', mode='w', encoding='utf-8', newline='')
             inform.writer = csv.writer(inform.csv_doc, delimiter=';', quotechar='"')
             a = ['Name']
             for i in range(inform.count):
